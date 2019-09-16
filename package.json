@@ -1,0 +1,29 @@
+{
+  "name": "stative",
+  "version": "0.1.5",
+  "description": "A simple reactive state library",
+  "source": "src/stative.js",
+  "main": "dist/stative.js",
+  "module": "dist/stative.m.js",
+  "unpkg": "dist/stative.umd.js",
+  "repository": "alandecastro/stative",
+  "scripts": {
+    "build": "microbundle build",
+    "dev": "microbundle watch"
+  },
+  "dependencies": {
+    "object-path": "^0.11.4",
+    "rxjs": "^6.5.3"
+  },
+  "author": "Alan Castro",
+  "license": "MIT",
+  "devDependencies": {
+    "microbundle": "^0.11.0"
+  },
+  "keywords": [
+    "stative",
+    "state",
+    "reactive",
+    "rxjs"
+  ]
+}
