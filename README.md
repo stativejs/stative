@@ -35,8 +35,8 @@ state.subscribe("articles", articles =>
   console.log("articles has changed", articles)
 );
 
-state.update("menus.about", "selected");
-state.update("articles", [1, 2, 3]);
+state.set("menus.about", "selected");
+state.set("articles", [1, 2, 3]);
 
 var currentState = state.get();
 console.log(currentState);

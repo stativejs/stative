@@ -1,174 +1,202 @@
-import { BehaviorSubject, Subject } from "rxjs";
-import { skip, takeUntil } from "rxjs/operators";
-import objectPath from "object-path";
+import { BehaviorSubject, Subject } from 'rxjs';
+import { skip, takeUntil } from 'rxjs/operators';
+import objectPath from 'object-path';
 
-const ROOT_SUBJECT_KEY = "";
+const ROOT_SUBJECT_KEY = '';
 
 class State {
   constructor() {
-    this._state = null;
-    this._subjects = {
-      "": new BehaviorSubject(null)
+    this.unsubscribe$ = new Subject();
+    this.initiliaze();
+  }
+
+  initiliaze() {
+    this.state = null;
+    this.subjects = {
+      '': new BehaviorSubject(null),
     };
-    this._subscriptions = [];
-    this._unsubscribe$ = new Subject();
+  }
+
+  reset() {
+    this.unsubscribe$.next();
+    this.initiliaze();
   }
 
   destroy() {
-    this._unsubscribe$.next();
-    this._unsubscribe$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
-  _removeAllSubjects() {
-    this._subscriptions.forEach(s => {
-      s.unsubscribe();
-    });
-    this._subscriptions = [];
-
-    for (var path in this._subjects) {
-      if (path === ROOT_SUBJECT_KEY) {
-        continue;
-      }
-      this._subjects[path].complete();
-      delete this._subjects[path];
+  expandPath(path) {
+    if (typeof path !== 'string') {
+      return [];
     }
-  }
 
-  _getAllPathsFromObject(obj, prefix = "", store = []) {
-    for (let key in obj) {
-      const curPath = `${prefix}.${key}`;
-      if (typeof obj[key] === "object") {
-        store.push(curPath);
-        this._getAllPathsFromObject(obj[key], curPath, store);
-      } else {
-        store.push(curPath);
-      }
+    if (path === '') {
+      return [];
     }
-    return store.map(p => p.substring(1));
-  }
 
-  _expandPath(path) {
-    var allPaths = [];
-    var paths = path.split(".");
-    for (var i = 0; i < paths.length; i++) {
-      allPaths.push(paths.slice(0, i + 1).join("."));
+    const allPaths = [];
+    const paths = path.split('.');
+    for (let i = 0; i < paths.length; i += 1) {
+      allPaths.push(paths.slice(0, i + 1).join('.'));
     }
     return allPaths;
   }
 
-  _createSubject(path) {
-    if (path in this._subjects) {
-      return;
+  getAllPathsFromObject(obj, prefix = '', store = []) {
+    if (obj === null || typeof obj !== 'object') {
+      return [];
     }
 
-    var value = objectPath.has(this._state, path)
-      ? objectPath.get(this._state, path)
-      : null;
-    this._subjects[path] = new BehaviorSubject(value);
+    Object.keys(obj).forEach((key) => {
+      const curPath = `${prefix}.${key}`;
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        store.push(curPath);
+        this.getAllPathsFromObject(obj[key], curPath, store);
+      } else {
+        store.push(curPath);
+      }
+    });
+    return store.map((p) => p.substring(1));
   }
 
-  _updateSubject(path) {
-    if (!(path in this._subjects)) {
+  createSubject(path) {
+    if (typeof path !== 'string' || path in this.subjects) {
       return;
     }
 
-    var subject$ = this._subjects[path];
-    var value = objectPath.has(this._state, path)
-      ? objectPath.get(this._state, path)
+    this.subjects[path] = new BehaviorSubject(null);
+  }
+
+  getState$() {
+    return this.subjects[ROOT_SUBJECT_KEY];
+  }
+
+  createSubjects(paths) {
+    paths.forEach((p) => {
+      if (!(p in this.subjects)) {
+        this.createSubject(p);
+      }
+    });
+  }
+
+  updateSubject(path) {
+    if (typeof path !== 'string') {
+      return;
+    }
+
+    this.createSubject(path);
+
+    const subject$ = this.subjects[path];
+    const value = objectPath.has(this.state, path)
+      ? objectPath.get(this.state, path)
       : null;
-    if (value !== null && typeof value === "object") {
+
+    if (value !== null && typeof value === 'object') {
       subject$.next({ ...value });
     } else {
       subject$.next(value);
     }
   }
 
-  _createOrUpdateSubjects(paths) {
-    paths.forEach(p => {
-      if (!(p in this._subjects)) {
-        this._createSubject(p);
-      } else {
-        this._updateSubject(p);
-      }
+  updateSubjects(paths) {
+    paths.forEach((p) => {
+      this.updateSubject(p);
     });
   }
 
-  getState$() {
-    return this._subjects[ROOT_SUBJECT_KEY];
-  }
+  setState(state) {
+    if (typeof state === 'undefined') {
+      return;
+    }
 
-  set(state) {
-    var pathsBefore = this._getAllPathsFromObject(this._state);
-    this._state = state;
+    const pathsBefore = this.getAllPathsFromObject(this.state);
+    this.state = state;
 
-    var rootSubject$ = this.getState$();
+    const rootSubject$ = this.getState$();
     rootSubject$.next(state);
 
-    var paths = this._getAllPathsFromObject(state);
-    this._createOrUpdateSubjects(paths);
+    const paths = this.getAllPathsFromObject(state);
+    this.createSubjects(paths);
+    this.updateSubjects(paths);
 
-    var excludedPaths = pathsBefore.filter(
-      p => p !== ROOT_SUBJECT_KEY && !paths.includes(p)
+    const excludedPaths = pathsBefore.filter(
+      (p) => p !== ROOT_SUBJECT_KEY && !paths.includes(p)
     );
 
-    excludedPaths.forEach(p => {
-      var subject$ = this._subjects[p];
+    excludedPaths.forEach((p) => {
+      const subject$ = this.subjects[p];
       subject$.next(null);
     });
   }
 
+  update(path, value) {
+    if (typeof path !== 'string') {
+      return;
+    }
+
+    if (this.state === null) {
+      this.state = {};
+    }
+
+    objectPath.set(this.state, path, value);
+
+    const rootSubject$ = this.getState$();
+    const newState = { ...this.state };
+    rootSubject$.next(newState);
+
+    const pathsToUpdate = this.expandPath(path);
+    this.updateSubjects(pathsToUpdate);
+
+    if (value !== null && typeof value === 'object') {
+      const pathsInValue = this.getAllPathsFromObject(value).map(
+        (p) => `${path}.${p}`
+      );
+      this.updateSubjects(pathsInValue);
+    }
+  }
+
+  set(path, value) {
+    if (typeof path === 'object') {
+      this.setState(path);
+    } else {
+      this.update(path, value);
+    }
+  }
+
   get(path) {
-    if (typeof path === "undefined") {
+    if (typeof path === 'undefined') {
       return this.getState$().value;
     }
 
-    if (!(path in this._subjects)) {
+    if (!(path in this.subjects)) {
       return undefined;
     }
-    var subject$ = this._subjects[path];
+    const subject$ = this.subjects[path];
     return subject$.value;
   }
 
-  update(path, value) {
-    objectPath.set(this._state, path, value);
-
-    var pathsToUpdate = this._expandPath(path);
-    this._createOrUpdateSubjects(pathsToUpdate);
-
-    if (typeof value === "object") {
-      var pathsInValue = this._getAllPathsFromObject(value).map(
-        p => `${path}.${p}`
-      );
-      this._createOrUpdateSubjects(pathsInValue);
-      pathsToUpdate = pathsToUpdate.concat(pathsInValue);
-    }
-
-    var rootSubject = this.getState$();
-    var newState = { ...this._state };
-    rootSubject.next(newState);
-  }
-
   subscribe(path, fn) {
-    if (typeof path === "function") {
+    if (typeof path === 'function') {
       this.getState$()
         .pipe(
           skip(1),
-          takeUntil(this._unsubscribe$)
+          takeUntil(this.unsubscribe$)
         )
         .subscribe(path);
       return;
     }
 
-    this._createSubject(path);
+    this.createSubject(path);
 
-    var subject$ = this._subjects[path];
-    var subscription = subject$
+    const subject$ = this.subjects[path];
+    subject$
       .pipe(
         skip(1),
-        takeUntil(this._unsubscribe$)
+        takeUntil(this.unsubscribe$)
       )
       .subscribe(fn);
-    this._subscriptions.push(subscription);
   }
 }
 
