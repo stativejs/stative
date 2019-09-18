@@ -12,7 +12,8 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "build": "microbundle build",
-    "dev": "microbundle watch"
+    "dev": "microbundle watch",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "object-path": "^0.11.4",
@@ -35,5 +36,8 @@
     "state",
     "reactive",
     "rxjs"
+  ],
+  "files": [
+    "/dist"
   ]
 }
