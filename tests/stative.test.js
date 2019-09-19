@@ -127,6 +127,33 @@ describe('setState tests', () => {
     expect(state.state).toBe(null);
   });
 
+  test('do setState with array inside stater', () => {
+    const newState = {
+      a: {
+        b: {
+          c: 1,
+        },
+      },
+      items: [
+        { text: 'a simple text' },
+        { text: 'a simple text' },
+        { text: 'a simple text' },
+      ],
+    };
+    state.setState(newState);
+    expect(Object.keys(state.subjects).length).toBe(5);
+    expect(state.state).toBe(newState);
+    expect(state.subjects['a.b.c'].value).toBe(1);
+    expect(state.subjects['a.b'].value).toEqual({ c: 1 });
+    expect(state.subjects.a.value).toEqual({ b: { c: 1 } });
+    expect(state.subjects.items.value).toEqual([
+      { text: 'a simple text' },
+      { text: 'a simple text' },
+      { text: 'a simple text' },
+    ]);
+    expect(state.getState$().value).toEqual(newState);
+  });
+
   test('do setState', () => {
     const newState = {
       a: {

@@ -51,7 +51,7 @@ class State {
 
     Object.keys(obj).forEach((key) => {
       const curPath = `${prefix}.${key}`;
-      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+      if (typeof obj[key] === 'object' && !(obj[key].constructor === Array)) {
         store.push(curPath);
         this.getAllPathsFromObject(obj[key], curPath, store);
       } else {
@@ -93,7 +93,9 @@ class State {
       ? objectPath.get(this.state, path)
       : null;
 
-    if (value !== null && typeof value === 'object') {
+    if (value !== null && value.constructor === Array) {
+      subject$.next([...value]);
+    } else if (value !== null && typeof value === 'object') {
       subject$.next({ ...value });
     } else {
       subject$.next(value);
@@ -118,6 +120,7 @@ class State {
     rootSubject$.next(state);
 
     const paths = this.getAllPathsFromObject(state);
+    console.log(paths);
     this.createSubjects(paths);
     this.updateSubjects(paths);
 
