@@ -1,6 +1,6 @@
 {
   "name": "stative",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A simple reactive state library",
   "source": "src/stative.js",
   "main": "dist/stative.js",
