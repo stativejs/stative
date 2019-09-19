@@ -120,7 +120,6 @@ class State {
     rootSubject$.next(state);
 
     const paths = this.getAllPathsFromObject(state);
-    console.log(paths);
     this.createSubjects(paths);
     this.updateSubjects(paths);
 
