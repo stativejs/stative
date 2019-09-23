@@ -51,7 +51,7 @@ class State {
 
     Object.keys(obj).forEach((key) => {
       const curPath = `${prefix}.${key}`;
-      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+      if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
         store.push(curPath);
         this.getAllPathsFromObject(obj[key], curPath, store);
       } else {

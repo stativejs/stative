@@ -12,7 +12,9 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "build": "microbundle build",
-    "dev": "microbundle watch"
+    "dev": "microbundle watch",
+    "prepublishOnly": "npm run build",
+    "release": "np"
   },
   "dependencies": {
     "object-path": "^0.11.4",
@@ -24,11 +26,12 @@
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "babel-jest": "^24.9.0",
-    "eslint": "^6.1.0",
+    "eslint": "^6.4.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "jest": "^24.9.0",
-    "microbundle": "^0.11.0"
+    "microbundle": "^0.11.0",
+    "np": "^5.1.0"
   },
   "keywords": [
     "stative",
