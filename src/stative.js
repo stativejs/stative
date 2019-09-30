@@ -45,18 +45,22 @@ class State {
   }
 
   getAllPathsFromObject(obj, prefix = '', store = []) {
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj === 'undefined') {
+      return [];
+    }
+
+    if (obj instanceof Array) {
+      return [];
+    }
+
+    if (typeof obj !== 'object') {
       return [];
     }
 
     Object.keys(obj).forEach((key) => {
       const curPath = `${prefix}.${key}`;
-      if (typeof obj[key] === 'object' && !(obj[key].constructor === Array)) {
-        store.push(curPath);
-        this.getAllPathsFromObject(obj[key], curPath, store);
-      } else {
-        store.push(curPath);
-      }
+      store.push(curPath);
+      this.getAllPathsFromObject(obj[key], curPath, store);
     });
     return store.map((p) => p.substring(1));
   }
