@@ -161,13 +161,15 @@ describe('setState tests', () => {
           c: 1,
         },
       },
+      z: null
     };
     state.setState(newState);
-    expect(Object.keys(state.subjects).length).toBe(4);
+    expect(Object.keys(state.subjects).length).toBe(5);
     expect(state.state).toBe(newState);
     expect(state.subjects['a.b.c'].value).toBe(1);
     expect(state.subjects['a.b'].value).toEqual({ c: 1 });
     expect(state.subjects.a.value).toEqual({ b: { c: 1 } });
+    expect(state.subjects.z.value).toEqual(null);
     expect(state.getState$().value).toEqual(newState);
   });
 });
