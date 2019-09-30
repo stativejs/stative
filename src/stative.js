@@ -4,7 +4,7 @@ import objectPath from 'object-path';
 
 const ROOT_SUBJECT_KEY = '';
 
-class State {
+export class Stative {
   constructor() {
     this.unsubscribe$ = new Subject();
     this.initiliaze();
@@ -206,4 +206,4 @@ class State {
   }
 }
 
-export default new State();
+export default new Stative();
