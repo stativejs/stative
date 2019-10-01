@@ -1,38 +1,58 @@
-import state from '../src/stative';
+import { Stative } from '../src/stative';
 
 describe('expandPath tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
+  });
+
   test('undefined path', () => {
-    expect(state.expandPath()).toEqual([]);
+    expect(appState.expandPath()).toEqual([]);
   });
 
   test('null path', () => {
-    expect(state.expandPath(null)).toEqual([]);
+    expect(appState.expandPath(null)).toEqual([]);
   });
 
   test('empty path', () => {
-    expect(state.expandPath('')).toEqual([]);
+    expect(appState.expandPath('')).toEqual([]);
   });
 
   test('one path', () => {
-    expect(state.expandPath('loading')).toEqual(['loading']);
+    expect(appState.expandPath('loading')).toEqual(['loading']);
   });
 });
 
 describe('getAllPathsFromObject tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
+  });
+
   test('null', () => {
-    expect(state.getAllPathsFromObject(null)).toEqual([]);
+    expect(appState.getAllPathsFromObject(null)).toEqual([]);
   });
 
   test('not object', () => {
-    expect(state.getAllPathsFromObject('a string')).toEqual([]);
+    expect(appState.getAllPathsFromObject('a string')).toEqual([]);
   });
 
   test('empty object', () => {
-    expect(state.getAllPathsFromObject({})).toEqual([]);
+    expect(appState.getAllPathsFromObject({})).toEqual([]);
   });
 
   test('big object', () => {
-    const paths = state.getAllPathsFromObject({
+    const paths = appState.getAllPathsFromObject({
       a: {
         b: {
           c: {
@@ -48,83 +68,111 @@ describe('getAllPathsFromObject tests', () => {
 });
 
 describe('initialize tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
+  });
+
   test('do initialize', () => {
-    state.initiliaze();
-    expect(state.state).toBe(null);
-    expect(Object.keys(state.subjects).length).toBe(1);
+    appState.initiliaze();
+    expect(appState.state).toBe(null);
+    expect(Object.keys(appState.subjects).length).toBe(1);
   });
 });
 
 describe('createSubject tests', () => {
-  beforeEach(() => {
-    state.reset();
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
   });
 
   test('do createSubject with no argument', () => {
-    state.createSubject();
-    expect(Object.keys(state.subjects).length).toBe(1);
-    expect(state.state).toBe(null);
+    appState.createSubject();
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
   });
 
   test('do createSubject', () => {
     const path = 'a.b';
-    state.createSubject(path);
-    expect(Object.keys(state.subjects).length).toBe(2);
-    expect(state.subjects[path].value).toBe(null);
-    expect(state.state).toBe(null);
+    appState.createSubject(path);
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.subjects[path].value).toBe(null);
+    expect(appState.state).toBe(null);
   });
 });
 
 describe('updateSubject with no state defined', () => {
-  beforeEach(() => {
-    state.reset();
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
   });
 
   test('do updateSubject with no argument', () => {
-    state.updateSubject();
-    expect(Object.keys(state.subjects).length).toBe(1);
-    expect(state.state).toBe(null);
+    appState.updateSubject();
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
   });
 
   test('do updateSubject with path that does not exist', () => {
     const path = 'a.b';
-    state.updateSubject(path);
-    expect(Object.keys(state.subjects).length).toBe(2);
-    expect(state.subjects[path].value).toBe(null);
+    appState.updateSubject(path);
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.subjects[path].value).toBe(undefined);
   });
 
   test('do updateSubject', () => {
-    state.state = {
+    appState.state = {
       a: {
         b: 99,
       },
     };
     const path = 'a.b';
-    state.updateSubject(path);
-    expect(Object.keys(state.subjects).length).toBe(2);
-    expect(state.subjects[path].value).toBe(99);
+    appState.updateSubject(path);
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.subjects[path].value).toBe(99);
   });
 });
 
 describe('setState tests', () => {
-  beforeEach(() => {
-    state.reset();
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
   });
 
   test('do setState with no argument', () => {
-    state.setState();
-    expect(Object.keys(state.subjects).length).toBe(1);
-    expect(state.state).toBe(null);
+    appState.setState();
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
   });
 
   test('do setState with null', (done) => {
-    state.subscribe((s) => {
+    appState.subscribe((s) => {
       expect(s).toBe(null);
       done();
     });
-    state.setState(null);
-    expect(Object.keys(state.subjects).length).toBe(1);
-    expect(state.state).toBe(null);
+    appState.setState(null);
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
   });
 
   test('do setState with array inside stater', () => {
@@ -140,18 +188,18 @@ describe('setState tests', () => {
         { text: 'a simple text' },
       ],
     };
-    state.setState(newState);
-    expect(Object.keys(state.subjects).length).toBe(5);
-    expect(state.state).toBe(newState);
-    expect(state.subjects['a.b.c'].value).toBe(1);
-    expect(state.subjects['a.b'].value).toEqual({ c: 1 });
-    expect(state.subjects.a.value).toEqual({ b: { c: 1 } });
-    expect(state.subjects.items.value).toEqual([
+    appState.setState(newState);
+    expect(Object.keys(appState.subjects).length).toBe(5);
+    expect(appState.state).toBe(newState);
+    expect(appState.subjects['a.b.c'].value).toBe(1);
+    expect(appState.subjects['a.b'].value).toEqual({ c: 1 });
+    expect(appState.subjects.a.value).toEqual({ b: { c: 1 } });
+    expect(appState.subjects.items.value).toEqual([
       { text: 'a simple text' },
       { text: 'a simple text' },
       { text: 'a simple text' },
     ]);
-    expect(state.getState$().value).toEqual(newState);
+    expect(appState.getState$().value).toEqual(newState);
   });
 
   test('do setState', () => {
@@ -163,63 +211,101 @@ describe('setState tests', () => {
       },
       z: null
     };
-    state.setState(newState);
-    expect(Object.keys(state.subjects).length).toBe(5);
-    expect(state.state).toBe(newState);
-    expect(state.subjects['a.b.c'].value).toBe(1);
-    expect(state.subjects['a.b'].value).toEqual({ c: 1 });
-    expect(state.subjects.a.value).toEqual({ b: { c: 1 } });
-    expect(state.subjects.z.value).toEqual(null);
-    expect(state.getState$().value).toEqual(newState);
+    appState.setState(newState);
+    expect(Object.keys(appState.subjects).length).toBe(5);
+    expect(appState.state).toBe(newState);
+    expect(appState.subjects['a.b.c'].value).toBe(1);
+    expect(appState.subjects['a.b'].value).toEqual({ c: 1 });
+    expect(appState.subjects.a.value).toEqual({ b: { c: 1 } });
+    expect(appState.subjects.z.value).toEqual(null);
+    expect(appState.getState$().value).toEqual(newState);
+  });
+
+  test('do setState with a value of undefined', () => {
+    appState.setState({ loading: undefined });
+    expect(typeof appState.subjects.loading.value).toBe('undefined');
+  });
+
+  test('do setState with a new object that differs from the other one', () => {
+    appState.setState({ loading: true });
+    appState.setState({ a: 1 });
+    expect(Object.keys(appState.subjects).length).toEqual(3);
+    expect(typeof appState.subjects.loading.value).toBe('undefined');
+    expect(appState.subjects.a.value).toEqual(1);
   });
 });
 
 describe('update tests', () => {
-  beforeEach(() => {
-    state.reset();
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  afterEach(() => {
+    appState.destroy();
   });
 
   test('do update with no argument', () => {
-    state.update();
-    expect(Object.keys(state.subjects).length).toBe(1);
-    expect(state.state).toBe(null);
+    appState.update();
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
   });
 
   test('do update with no state', () => {
-    state.update('a.b.c', 1);
-    expect(Object.keys(state.subjects).length).toBe(4);
-    expect(state.state).toEqual({
+    appState.update('a.b.c', 1);
+    expect(Object.keys(appState.subjects).length).toBe(4);
+    expect(appState.state).toEqual({
       a: {
         b: {
           c: 1,
         },
       },
     });
-    expect(state.subjects['a.b.c'].value).toBe(1);
-    expect(state.subjects['a.b'].value).toEqual({ c: 1 });
-    expect(state.subjects.a.value).toEqual({ b: { c: 1 } });
+    expect(appState.subjects['a.b.c'].value).toBe(1);
+    expect(appState.subjects['a.b'].value).toEqual({ c: 1 });
+    expect(appState.subjects.a.value).toEqual({ b: { c: 1 } });
   });
 
   test('do update', () => {
-    state.state = { a: { b: { c: 1 } } };
-    state.update('a.b.c', 2);
-    expect(Object.keys(state.subjects).length).toBe(4);
-    expect(state.state).toEqual({
+    appState.state = { a: { b: { c: 1 } } };
+    appState.update('a.b.c', 2);
+    expect(Object.keys(appState.subjects).length).toBe(4);
+    expect(appState.state).toEqual({
       a: {
         b: {
           c: 2,
         },
       },
     });
-    expect(state.subjects['a.b.c'].value).toBe(2);
-    expect(state.subjects['a.b'].value).toEqual({ c: 2 });
-    expect(state.subjects.a.value).toEqual({ b: { c: 2 } });
+    expect(appState.subjects['a.b.c'].value).toBe(2);
+    expect(appState.subjects['a.b'].value).toEqual({ c: 2 });
+    expect(appState.subjects.a.value).toEqual({ b: { c: 2 } });
+  });
+
+  test('do update, changing the whole object', () => {
+    appState.set({ a: { b: { c: 1 } } });
+    appState.update('a', { k: { z: 1 } });
+    expect(Object.keys(appState.subjects).length).toBe(6);
+    expect(appState.state).toEqual({
+      a: {
+        k: {
+          z: 1,
+        },
+      },
+    });
+    expect(appState.subjects['a.b.c'].value).toBe(undefined);
+    expect(appState.subjects['a.b'].value).toEqual(undefined);
+    expect(appState.subjects['a.k.z'].value).toBe(1);
+    expect(appState.subjects['a.k'].value).toEqual({ z: 1 });
+    expect(appState.subjects.a.value).toEqual({ k: { z: 1 } });
   });
 });
 
 describe('destroy tests', () => {
   test('do destroy', () => {
-    state.destroy();
-    expect(state.unsubscribe$.isStopped).toBe(true);
+    const appState = new Stative();
+    appState.destroy();
+    expect(appState.unsubscribe$.isStopped).toBe(true);
   });
 });

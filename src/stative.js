@@ -10,6 +10,16 @@ export class Stative {
     this.initiliaze();
   }
 
+  arrayDifference(a1, a2) {
+    const result = [];
+    for (let i = 0; i < a1.length; i += 1) {
+      if (a2.indexOf(a1[i]) === -1) {
+        result.push(a1[i]);
+      }
+    }
+    return result;
+  }
+
   initiliaze() {
     this.state = null;
     this.subjects = {
@@ -95,9 +105,9 @@ export class Stative {
     const subject$ = this.subjects[path];
     const value = objectPath.has(this.state, path)
       ? objectPath.get(this.state, path)
-      : null;
+      : undefined;
 
-    if (value !== null && value.constructor === Array) {
+    if (value !== null && typeof value !== 'undefined' && value.constructor === Array) {
       subject$.next([...value]);
     } else if (value !== null && typeof value === 'object') {
       subject$.next({ ...value });
@@ -117,7 +127,7 @@ export class Stative {
       return;
     }
 
-    const pathsBefore = this.getAllPathsFromObject(this.state);
+    const oldPaths = this.getAllPathsFromObject(this.state);
     this.state = state;
 
     const rootSubject$ = this.getState$();
@@ -127,14 +137,9 @@ export class Stative {
     this.createSubjects(paths);
     this.updateSubjects(paths);
 
-    const excludedPaths = pathsBefore.filter(
-      (p) => p !== ROOT_SUBJECT_KEY && !paths.includes(p)
-    );
-
-    excludedPaths.forEach((p) => {
-      const subject$ = this.subjects[p];
-      subject$.next(null);
-    });
+    const pathWithoutRoot = paths.filter((p) => p !== ROOT_SUBJECT_KEY);
+    const pathsToSetToUndefined = this.arrayDifference(oldPaths, pathWithoutRoot);
+    this.updateSubjects(pathsToSetToUndefined);
   }
 
   update(path, value) {
@@ -145,6 +150,8 @@ export class Stative {
     if (this.state === null) {
       this.state = {};
     }
+
+    const oldPaths = this.getAllPathsFromObject(this.state);
 
     objectPath.set(this.state, path, value);
 
@@ -161,6 +168,9 @@ export class Stative {
       );
       this.updateSubjects(pathsInValue);
     }
+
+    const pathsToSetToUndefined = this.arrayDifference(oldPaths, pathsToUpdate);
+    this.updateSubjects(pathsToSetToUndefined);
   }
 
   set(path, value) {
