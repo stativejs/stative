@@ -44,3 +44,13 @@ console.log(currentState);
 var articles = state.get('articles');
 console.log(articles);
 ```
+
+## Frameworks
+
+### React
+
+A simple Todo list example of Stative working in React can be verified in this [repo](https://github.com/bsgiovanini/react-stative). Soon, a plugin will be available.
+
+### Vue
+A plugin is available to ease the interation between application state and Vue components. It can be check [it] (https://github.com/alandecastros/vue-stative) out
+
