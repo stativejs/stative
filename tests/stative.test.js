@@ -227,10 +227,12 @@ describe('setState tests', () => {
   });
 
   test('do setState with a new object that differs from the other one', () => {
-    appState.setState({ loading: true });
+    appState.setState({ loading: true, z: { w: 1 } });
     appState.setState({ a: 1 });
-    expect(Object.keys(appState.subjects).length).toEqual(3);
+    expect(Object.keys(appState.subjects).length).toEqual(5);
     expect(typeof appState.subjects.loading.value).toBe('undefined');
+    expect(typeof appState.subjects.z.value).toBe('undefined');
+    expect(typeof appState.subjects['z.w'].value).toBe('undefined');
     expect(appState.subjects.a.value).toEqual(1);
   });
 });
