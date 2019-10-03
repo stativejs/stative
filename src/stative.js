@@ -169,7 +169,8 @@ export class Stative {
       this.updateSubjects(pathsInValue);
     }
 
-    const pathsToSetToUndefined = this.arrayDifference(oldPaths, pathsToUpdate);
+    const newPaths = this.getAllPathsFromObject(this.state);
+    const pathsToSetToUndefined = this.arrayDifference(oldPaths, newPaths);
     this.updateSubjects(pathsToSetToUndefined);
   }
 
