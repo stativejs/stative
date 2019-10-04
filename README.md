@@ -1,14 +1,14 @@
 # stative
 
-A simple to use reactive state.
+Easy to use reactive state.
 
-### Installation
+## Installation
 
 ```sh
 npm install stative
 ```
 
-### Usage
+## Usage
 
 ```ts
 import state from 'stative';

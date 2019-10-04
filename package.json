@@ -1,13 +1,13 @@
 {
   "name": "stative",
   "version": "0.1.12",
-  "description": "A simple reactive state library",
+  "description": "Easy to use reactive state.",
   "source": "src/stative.js",
   "main": "dist/stative.js",
   "umd:main": "dist/stative.umd.js",
   "module": "dist/stative.m.js",
   "unpkg": "dist/stative.umd.js",
-  "repository": "alandecastros/stative",
+  "repository": "stativejs/stative",
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watch",
@@ -20,7 +20,7 @@
     "object-path": "^0.11.4",
     "rxjs": "^6.5.3"
   },
-  "author": "Alan Castro",
+  "author": "Alan Castro <alandecastros@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.6.0",
