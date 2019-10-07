@@ -7,10 +7,6 @@ describe('expandPath tests', () => {
     appState = new Stative();
   });
 
-  afterEach(() => {
-    appState.destroy();
-  });
-
   test('undefined path', () => {
     expect(appState.expandPath()).toEqual([]);
   });
@@ -33,10 +29,6 @@ describe('getAllPathsFromObject tests', () => {
 
   beforeEach(async () => {
     appState = new Stative();
-  });
-
-  afterEach(() => {
-    appState.destroy();
   });
 
   test('null', () => {
@@ -67,33 +59,11 @@ describe('getAllPathsFromObject tests', () => {
   });
 });
 
-describe('initialize tests', () => {
-  let appState;
-
-  beforeEach(async () => {
-    appState = new Stative();
-  });
-
-  afterEach(() => {
-    appState.destroy();
-  });
-
-  test('do initialize', () => {
-    appState.initiliaze();
-    expect(appState.state).toBe(null);
-    expect(Object.keys(appState.subjects).length).toBe(1);
-  });
-});
-
 describe('createSubject tests', () => {
   let appState;
 
   beforeEach(async () => {
     appState = new Stative();
-  });
-
-  afterEach(() => {
-    appState.destroy();
   });
 
   test('do createSubject with no argument', () => {
@@ -116,10 +86,6 @@ describe('updateSubject with no state defined', () => {
 
   beforeEach(async () => {
     appState = new Stative();
-  });
-
-  afterEach(() => {
-    appState.destroy();
   });
 
   test('do updateSubject with no argument', () => {
@@ -155,10 +121,6 @@ describe('setState tests', () => {
     appState = new Stative();
   });
 
-  afterEach(() => {
-    appState.destroy();
-  });
-
   test('do setState with no argument', () => {
     appState.setState();
     expect(Object.keys(appState.subjects).length).toBe(1);
@@ -166,13 +128,16 @@ describe('setState tests', () => {
   });
 
   test('do setState with null', (done) => {
-    appState.subscribe((s) => {
+    const subscription = appState.subscribe((s) => {
       expect(s).toBe(null);
       done();
     });
+
     appState.setState(null);
     expect(Object.keys(appState.subjects).length).toBe(1);
     expect(appState.state).toBe(null);
+
+    subscription.unsubscribe();
   });
 
   test('do setState with array inside stater', () => {
@@ -244,10 +209,6 @@ describe('update tests', () => {
     appState = new Stative();
   });
 
-  afterEach(() => {
-    appState.destroy();
-  });
-
   test('do update with no argument', () => {
     appState.update();
     expect(Object.keys(appState.subjects).length).toBe(1);
@@ -301,13 +262,5 @@ describe('update tests', () => {
     expect(appState.subjects['a.k.z'].value).toBe(1);
     expect(appState.subjects['a.k'].value).toEqual({ z: 1 });
     expect(appState.subjects.a.value).toEqual({ k: { z: 1 } });
-  });
-});
-
-describe('destroy tests', () => {
-  test('do destroy', () => {
-    const appState = new Stative();
-    appState.destroy();
-    expect(appState.unsubscribe$.isStopped).toBe(true);
   });
 });

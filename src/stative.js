@@ -7,7 +7,10 @@ const ROOT_SUBJECT_KEY = '';
 export class Stative {
   constructor() {
     this.unsubscribe$ = new Subject();
-    this.initiliaze();
+    this.state = null;
+    this.subjects = {
+      '': new BehaviorSubject(null),
+    };
   }
 
   arrayDifference(a1, a2) {
@@ -18,23 +21,6 @@ export class Stative {
       }
     }
     return result;
-  }
-
-  initiliaze() {
-    this.state = null;
-    this.subjects = {
-      '': new BehaviorSubject(null),
-    };
-  }
-
-  reset() {
-    this.unsubscribe$.next();
-    this.initiliaze();
-  }
-
-  destroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   expandPath(path) {
@@ -196,19 +182,18 @@ export class Stative {
 
   subscribe(path, fn) {
     if (typeof path === 'function') {
-      this.getState$()
+      return this.getState$()
         .pipe(
           skip(1),
           takeUntil(this.unsubscribe$)
         )
         .subscribe(path);
-      return;
     }
 
     this.createSubject(path);
 
     const subject$ = this.subjects[path];
-    subject$
+    return subject$
       .pipe(
         skip(1),
         takeUntil(this.unsubscribe$)
