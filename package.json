@@ -1,6 +1,6 @@
 {
   "name": "stative",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Easy to use reactive state.",
   "source": "src/stative.js",
   "main": "dist/stative.js",
