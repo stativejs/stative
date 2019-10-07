@@ -1,5 +1,7 @@
 # stative
 
+[![NPM version](https://badge.fury.io/js/stative.svg)](http://badge.fury.io/js/stative)
+
 Easy to use reactive state.
 
 ### Motivation
@@ -150,7 +152,6 @@ const appState = state.get();
 Returns the value of the object's path.
 
 ```js
-const ```js
 state.set({
   counter: 1,
   loading: false,
@@ -170,7 +171,6 @@ const userAge = state.get('user.age');
 Subscribe to any change on the whole state.
 
 ```js
-const ```js
 state.set({
   counter: 1,
   loading: false,
@@ -192,7 +192,6 @@ const userAge = state.set('user.age', 45);
 Subscribe to a change only in some part of the state
 
 ```js
-const ```js
 state.set({
   counter: 1,
   loading: false,
