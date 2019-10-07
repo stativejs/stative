@@ -27,22 +27,29 @@ state.set({
   ],
 });
 
-state.subscribe((state) => console.log('state', state));
-state.subscribe('menus.about', (about) =>
+const stateSubscription = state.subscribe((state) => console.log('state', state));
+const menuAboutSubscription = state.subscribe('menus.about', (about) =>
   console.log('about has changed', about)
 );
-state.subscribe('articles', (articles) =>
+const articlesSubscription = state.subscribe('articles', (articles) =>
   console.log('articles has changed', articles)
 );
 
 state.set('menus.about', 'selected');
-state.set('articles', [1, 2, 3]);
+state.set('articles', currentArticles => {
+  return { ...{ id: 4, title: 'Using Stative!' }, ...currentArticles };
+});
 
 var currentState = state.get();
 console.log(currentState);
 
 var articles = state.get('articles');
 console.log(articles);
+
+// don't forget to unsubscribe!
+stateSubscription.unsubscribe();
+menuAboutSubscription.unsubscribe();
+articlesSubscription.unsubscribe();
 ```
 
 ## Frameworks

@@ -161,10 +161,20 @@ export class Stative {
   }
 
   set(path, value) {
-    if (typeof path === 'object') {
+    if (typeof path === 'function') {
+      const currentState = this.get();
+      const newState = path(currentState);
+      this.setState(newState);
+    } else if (typeof path === 'object') {
       this.setState(path);
-    } else {
-      this.update(path, value);
+    } else if (typeof path === 'string') {
+      if (typeof value === 'function') {
+        const currentPathValue = this.get(path);
+        const newPathValue = value(currentPathValue);
+        this.update(path, newPathValue);
+      } else {
+        this.update(path, value);
+      }
     }
   }
 

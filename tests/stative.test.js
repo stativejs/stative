@@ -264,3 +264,41 @@ describe('update tests', () => {
     expect(appState.subjects.a.value).toEqual({ k: { z: 1 } });
   });
 });
+
+describe('set tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  test('do set with no argument', () => {
+    appState.set();
+    expect(Object.keys(appState.subjects).length).toBe(1);
+    expect(appState.state).toBe(null);
+  });
+
+  test('do set object argument', () => {
+    appState.set({ a: 1 });
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.state).toEqual({ a: 1 });
+  });
+
+  test('do set function argument', () => {
+    appState.set((currentState) => ({ ...{ a: 1 }, ...currentState }));
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.state).toEqual({ a: 1 });
+  });
+
+  test('do set with path and function argument', () => {
+    appState.set('a', (value) => `this is my new value, the old is: ${value}`);
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.state.a).toEqual('this is my new value, the old is: undefined');
+  });
+
+  test('do set with path and value argument', () => {
+    appState.set('a', 'this is my new value');
+    expect(Object.keys(appState.subjects).length).toBe(2);
+    expect(appState.state.a).toEqual('this is my new value');
+  });
+});
