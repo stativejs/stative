@@ -6,7 +6,7 @@ Easy to use reactive state.
 
 ### Motivation
 
-Most of the solutions of state management in javascript is not as simple as it should be.
+Most solutions of state management in javascript are not as simple as it should be.
 
 Stative was created to be an easy and unique way to manage state in any javascript application.
 
