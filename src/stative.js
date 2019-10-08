@@ -9,7 +9,7 @@ export class Stative {
     this.unsubscribe$ = new Subject();
     this.state = null;
     this.subjects = {
-      '': new BehaviorSubject(null),
+      '': new BehaviorSubject(null)
     };
   }
 
@@ -53,12 +53,12 @@ export class Stative {
       return [];
     }
 
-    Object.keys(obj).forEach((key) => {
+    Object.keys(obj).forEach(key => {
       const curPath = `${prefix}.${key}`;
       store.push(curPath);
       this.getAllPathsFromObject(obj[key], curPath, store);
     });
-    return store.map((p) => p.substring(1));
+    return store.map(p => p.substring(1));
   }
 
   createSubject(path) {
@@ -74,7 +74,7 @@ export class Stative {
   }
 
   createSubjects(paths) {
-    paths.forEach((p) => {
+    paths.forEach(p => {
       if (!(p in this.subjects)) {
         this.createSubject(p);
       }
@@ -93,7 +93,11 @@ export class Stative {
       ? objectPath.get(this.state, path)
       : undefined;
 
-    if (value !== null && typeof value !== 'undefined' && value.constructor === Array) {
+    if (
+      value !== null &&
+      typeof value !== 'undefined' &&
+      value.constructor === Array
+    ) {
       subject$.next([...value]);
     } else if (value !== null && typeof value === 'object') {
       subject$.next({ ...value });
@@ -103,7 +107,7 @@ export class Stative {
   }
 
   updateSubjects(paths) {
-    paths.forEach((p) => {
+    paths.forEach(p => {
       this.updateSubject(p);
     });
   }
@@ -123,8 +127,11 @@ export class Stative {
     this.createSubjects(paths);
     this.updateSubjects(paths);
 
-    const pathWithoutRoot = paths.filter((p) => p !== ROOT_SUBJECT_KEY);
-    const pathsToSetToUndefined = this.arrayDifference(oldPaths, pathWithoutRoot);
+    const pathWithoutRoot = paths.filter(p => p !== ROOT_SUBJECT_KEY);
+    const pathsToSetToUndefined = this.arrayDifference(
+      oldPaths,
+      pathWithoutRoot
+    );
     this.updateSubjects(pathsToSetToUndefined);
   }
 
@@ -150,7 +157,7 @@ export class Stative {
 
     if (value !== null && typeof value === 'object') {
       const pathsInValue = this.getAllPathsFromObject(value).map(
-        (p) => `${path}.${p}`
+        p => `${path}.${p}`
       );
       this.updateSubjects(pathsInValue);
     }

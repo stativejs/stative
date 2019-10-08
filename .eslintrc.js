@@ -2,15 +2,15 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    jest: true
   },
   parserOptions: {
     parser: 'babel-eslint',
     // specifying a module sourcetype prevent eslint from marking import statements as errors
-    sourceType: 'module',
+    sourceType: 'module'
   },
   extends: [
     'airbnb-base',
+    'plugin:prettier/recommended'
   ], // activate vue related rules
   rules: {
     'comma-dangle': 'off',
@@ -18,5 +18,6 @@ module.exports = {
     'import/no-unresolved': 'off',
     'implicit-arrow-linebreak': 'off',
     'import/prefer-default-export': 'off',
+    'prettier/prettier': ['error', { 'singleQuote': true }]
   },
 };

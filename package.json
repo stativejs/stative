@@ -14,7 +14,7 @@
     "build": "microbundle build",
     "dev": "microbundle watch",
     "prepublishOnly": "npm run build",
-    "release": "np"
+    "release": "np --yolo"
   },
   "dependencies": {
     "object-path": "^0.11.4",
@@ -25,13 +25,17 @@
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "eslint": "^6.4.0",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.4.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
     "jest": "^24.9.0",
-    "microbundle": "^0.11.0",
-    "np": "^5.1.0"
+    "microbundle": "^0.12.0-next.6",
+    "np": "^5.1.0",
+    "prettier": "^1.18.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
