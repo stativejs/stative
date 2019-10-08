@@ -1,6 +1,7 @@
 # stative
 
 [![NPM version](https://badge.fury.io/js/stative.svg)](http://badge.fury.io/js/stative)
+[![Build Status](https://travis-ci.org/stativejs/stative.png?branch=master)](https://travis-ci.org/stativejs/stative)
 
 Easy to use reactive state.
 
