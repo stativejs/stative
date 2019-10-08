@@ -194,7 +194,7 @@ const userAge = state.get('user.age');
 // userAge is 32
 ```
 
-#### subscribe(fn)
+#### `subscribe(fn)`
 
 Subscribe to any change on the whole state.
 
@@ -217,7 +217,7 @@ const userAge = state.set('user.age', 45);
 subscription.unsubscribe();
 ```
 
-#### subscribe(path, fn)
+#### `subscribe(path, fn)`
 
 Subscribe to a change only in some part of the state
 
