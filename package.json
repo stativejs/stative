@@ -33,6 +33,10 @@
     "microbundle": "^0.11.0",
     "np": "^5.1.0"
   },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "keywords": [
     "stative",
     "state",
