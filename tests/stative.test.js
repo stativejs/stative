@@ -302,3 +302,51 @@ describe('set tests', () => {
     expect(appState.state.a).toEqual('this is my new value');
   });
 });
+
+describe('set tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  test('do get with no state', () => {
+    const currentState = appState.get();
+    expect(currentState).toBe(null);
+  });
+
+  test('do get with a path that does not exist', () => {
+    const login = appState.get('login');
+    expect(login).toBe(undefined);
+  });
+
+  test('do get with a path that exists', () => {
+    appState.set({ login: 'alandecastros' });
+    const login = appState.get('login');
+    expect(login).toBe('alandecastros');
+  });
+});
+
+describe('subscribe tests', () => {
+  let appState;
+
+  beforeEach(async () => {
+    appState = new Stative();
+  });
+
+  test('do subscribe with whole state', (done) => {
+    appState.subscribe((state) => {
+      expect(state).toEqual({ github: 'stativejs' });
+      done();
+    });
+    appState.set({ github: 'stativejs' });
+  });
+
+  test('do subscribe with a path', (done) => {
+    appState.subscribe('github', (val) => {
+      expect(val).toBe('stativejs');
+      done();
+    });
+    appState.set({ github: 'stativejs' });
+  });
+});
