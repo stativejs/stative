@@ -244,10 +244,5 @@ subscription.unsubscribe();
 
 ### Frameworks
 
-#### React
-
-Checkout [react-stative](https://github.com/stativejs/react-stative).
-
-#### Vue
-Checkout [vue-stative](https://github.com/stativejs/vue-stative).
-
+* [React](https://github.com/stativejs/react-stative)
+* [Vue](https://github.com/stativejs/vue-stative)
