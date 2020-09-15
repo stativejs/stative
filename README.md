@@ -1,3 +1,7 @@
+# Deprecated!
+
+As of Sept 15th 2020, stative is fully deprecated.
+
 # stative
 
 [![NPM version](https://badge.fury.io/js/stative.svg)](http://badge.fury.io/js/stative)
